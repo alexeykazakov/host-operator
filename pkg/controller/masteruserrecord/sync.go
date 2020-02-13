@@ -47,7 +47,9 @@ type Synchronizer struct {
 func (s *Synchronizer) synchronizeSpec() error {
 	if !reflect.DeepEqual(s.memberUserAcc.Spec, s.recordSpecUserAcc.Spec) {
 		// when UserAccount spec in record is updated - is not same as in member
-		s.memberUserAcc.Spec = s.recordSpecUserAcc.Spec
+		s.memberUserAcc.Spec.UserID = s.recordSpecUserAcc.Spec.UserID
+		s.memberUserAcc.Spec.Disabled = s.recordSpecUserAcc.Spec.Disabled
+		s.memberUserAcc.Spec.UserAccountSpecBase = s.recordSpecUserAcc.Spec.UserAccountSpecBase
 		if err := updateStatusConditions(s.hostClient, s.record, toBeNotReady(updatingReason, "")); err != nil {
 			return err
 		}

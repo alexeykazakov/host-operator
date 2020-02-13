@@ -5,7 +5,8 @@ import (
 
 	"github.com/codeready-toolchain/api/pkg/apis/toolchain/v1alpha1"
 	"github.com/codeready-toolchain/host-operator/pkg/configuration"
-	"github.com/codeready-toolchain/toolchain-common/pkg/template"
+	apply "github.com/codeready-toolchain/toolchain-common/pkg/client"
+
 	"k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -25,7 +26,7 @@ func CreateOrUpdateResources(client client.Client, s *runtime.Scheme, namespace 
 		Spec: v1alpha1.RegistrationServiceSpec{
 			EnvironmentVariables: envs,
 		}}
-	processor := template.NewProcessor(client, s)
-	_, err := processor.ApplySingle(regService, false, nil)
+	applyClient := apply.NewApplyClient(client, s)
+	_, err := applyClient.CreateOrUpdateObject(regService, false, nil)
 	return err
 }
